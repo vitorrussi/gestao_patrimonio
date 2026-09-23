@@ -1,8 +1,9 @@
 #!/bin/sh
 set -e
 
-uv run alembic upgrade head
+# Binários da .venv direto (PATH do Dockerfile): `uv run` sincronizaria o grupo dev no start.
+alembic upgrade head
 
-exec uv run gunicorn "app:create_app()" \
+exec gunicorn "app:create_app()" \
     --bind 0.0.0.0:8000 \
     --workers 2

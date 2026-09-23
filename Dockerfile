@@ -15,7 +15,8 @@ ARG UID=1000
 ARG GID=1000
 
 ENV UV_PYTHON_PREFERENCE=only-system \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PATH="/app/backend/.venv/bin:$PATH"
 
 RUN pip install --no-cache-dir uv==0.12.17 \
     && groupadd --gid "${GID}" app \
