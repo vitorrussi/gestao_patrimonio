@@ -155,15 +155,15 @@ Cada fase entrega algo funcionando e só adiciona o necessário. Não avance de 
 
 - [x] Modelo de usuário, cadastro e login com Flask-Login
 - [x] Todas as rotas `/api` (exceto login e health) exigindo autenticação
-- [ ] Tipo ou helper padrão para dinheiro (centavos no banco ↔ `Decimal` no Python)
+- [x] Tipo ou helper padrão para dinheiro (centavos no banco ↔ `Decimal` no Python)
 - [ ] Validação de entrada com Pydantic em todas as rotas que recebem dados
-- [ ] Primeiros modelos de domínio e migrações (conforme o escopo definido)
+- [x] Primeiros modelos de domínio e migrações (conforme o escopo definido)
 - [x] Fixtures do pytest: app de teste, SQLite temporário por teste, usuário logado
-- [ ] Testes unitários dos cálculos em `services/`
+- [x] Testes unitários dos cálculos em `services/`
 - [ ] Testes de integração dos endpoints (status 200/201/400/401/404)
 - [ ] **Teste de isolamento:** usuário A não lê nem altera dados do usuário B
-- [ ] Teste de migrações: upgrade do zero e downgrade da última
-- [ ] Testes de propriedades com Hypothesis nos cálculos
+- [x] Teste de migrações: upgrade do zero e downgrade da última
+- [x] Testes de propriedades com Hypothesis nos cálculos
 - [x] Regra C901 do Ruff ativa (complexidade ≤ 10)
 
 **Pronto quando:** a suíte roda em segundos, e a cobertura dos módulos de cálculo está perto de 100%.

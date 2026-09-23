@@ -28,7 +28,7 @@ Leia os dois antes de planejar qualquer trabalho. Se uma instrução contradisse
 ## Stack
 
 - Backend: Python, Flask, SQLAlchemy 2.0 (`Mapped[...]`), Alembic, Pydantic, Flask-Login, Gunicorn, uv.
-- Banco: SQLite com `PRAGMA journal_mode=WAL` e `PRAGMA busy_timeout=5000` em cada conexão.
+- Banco: SQLite com `PRAGMA journal_mode=WAL`, `PRAGMA busy_timeout=5000` e `PRAGMA foreign_keys=ON` em cada conexão (as chaves estrangeiras ficam desligadas só durante as migrações).
 - Frontend: React + TypeScript (`strict`) + Vite, React Router, TanStack Query, Tailwind CSS + shadcn/ui, React Hook Form + Zod, npm.
 - Qualidade: Ruff (inclui C901), pyright, ESLint (`complexity`, `max-lines`, `max-lines-per-function`, `eslint-plugin-sonarjs`), Prettier, `tsc --noEmit`, pytest, Hypothesis, Vitest.
 - Docker: Dockerfile multi-stage (Node faz o build do front; a imagem Python serve `/api` e os estáticos do `dist/`), entrypoint com `alembic upgrade head` e depois Gunicorn, compose com o serviço `app` e bind mount `./data:/app/data`, usuário não-root.
@@ -46,7 +46,8 @@ Rodar da raiz do repositório. Pré-requisitos: `uv`, Node 22 e `npm install` em
 - Tipos: `make types` (pyright + `tsc -b`)
 - Testes: `make test` (pytest + Vitest)
 - Tudo (`check`): `make check`
-- Nova migração: `cd backend && uv run alembic revision --autogenerate -m "descrição"`
+- Cobertura dos services: `make cov` (falha abaixo de 95%)
+- Nova migração: `cd backend && uv run alembic revision --autogenerate -m "descrição"`. Revise o arquivo gerado: o autogenerate não detecta renomeações (vira remover + criar) nem mudanças em CHECK.
 - Docker: `docker compose up --build` → http://127.0.0.1:8080
 
 ## Forma de trabalho
