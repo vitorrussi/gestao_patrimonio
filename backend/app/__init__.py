@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flask import Flask, g, jsonify, request, send_from_directory
+from flask import Flask, abort, g, jsonify, request, send_from_directory
 
 from app.config import Config
 from app.db import create_engine_with_pragmas, make_session_factory
@@ -30,6 +30,10 @@ def create_app(config: Config | None = None) -> Flask:
     return app
 
 
+def _is_api_path(path: str) -> bool:
+    return path == "api" or path.startswith("api/")
+
+
 def _register_frontend_routes(app: Flask, dist_dir: Path) -> None:
     def _index_response():
         if not (dist_dir / "index.html").is_file():
@@ -42,13 +46,15 @@ def _register_frontend_routes(app: Flask, dist_dir: Path) -> None:
 
     @app.errorhandler(404)
     def _handle_not_found(error: object):
-        if request.path.startswith("/api/"):
+        if _is_api_path(request.path.lstrip("/")):
             return jsonify(error="not_found"), 404
         return _index_response()
 
     @app.get("/")
     @app.get("/<path:path>")
     def _serve_frontend(path: str = ""):
+        if _is_api_path(path):
+            abort(404)
         target = dist_dir / path
         if path and target.is_file():
             return send_from_directory(dist_dir, path)

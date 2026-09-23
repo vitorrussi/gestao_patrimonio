@@ -17,11 +17,7 @@ class Config:
     def __init__(self) -> None:
         self.data_dir = Path(os.environ.get("DATA_DIR", str(REPO_ROOT / "data")))
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        self.database_url = os.environ.get(
-            "DATABASE_URL", f"sqlite:///{self.data_dir / 'app.db'}"
-        )
+        self.database_url = os.environ.get("DATABASE_URL", f"sqlite:///{self.data_dir / 'app.db'}")
         self.frontend_dist_dir = Path(
-            os.environ.get(
-                "FRONTEND_DIST_DIR", str(REPO_ROOT / "frontend" / "dist")
-            )
+            os.environ.get("FRONTEND_DIST_DIR", str(REPO_ROOT / "frontend" / "dist"))
         )
