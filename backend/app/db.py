@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from sqlite3 import Connection
 
 from flask import current_app, g
@@ -19,16 +20,24 @@ class Base(DeclarativeBase):
     metadata = MetaData(naming_convention=NAMING_CONVENTION)
 
 
-def _apply_sqlite_pragmas(dbapi_connection: Connection, connection_record: object) -> None:
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA journal_mode=WAL")
-    cursor.execute("PRAGMA busy_timeout=5000")
-    cursor.close()
+def _pragma_listener(foreign_keys: bool) -> Callable[[Connection, object], None]:
+    def _apply_sqlite_pragmas(dbapi_connection: Connection, connection_record: object) -> None:
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA journal_mode=WAL")
+        cursor.execute("PRAGMA busy_timeout=5000")
+        cursor.execute(f"PRAGMA foreign_keys={'ON' if foreign_keys else 'OFF'}")
+        cursor.close()
+
+    return _apply_sqlite_pragmas
 
 
-def create_engine_with_pragmas(database_url: str) -> Engine:
+def create_engine_with_pragmas(database_url: str, *, foreign_keys: bool = True) -> Engine:
+    """Engine SQLite com WAL, busy_timeout e chaves estrangeiras (sem elas o SQLite as ignora).
+
+    `foreign_keys=False` só para migrações: o modo batch do Alembic recria tabelas.
+    """
     engine = create_engine(database_url, future=True)
-    event.listen(engine, "connect", _apply_sqlite_pragmas)
+    event.listen(engine, "connect", _pragma_listener(foreign_keys))
     return engine
 
 
