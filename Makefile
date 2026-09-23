@@ -1,4 +1,4 @@
-.PHONY: dev lint types test check format
+.PHONY: dev lint types test check format cov
 
 # Backend (Flask, porta 8080) e frontend (Vite, porta 5173) juntos; Ctrl+C encerra os dois.
 # A porta 8080 é a mesma do Docker: rode `docker compose down` antes.
@@ -25,3 +25,7 @@ check: lint types test
 format:
 	cd backend && uv run ruff check --fix . && uv run ruff format .
 	cd frontend && npm run format
+
+# Cobertura dos services (cálculos): falha abaixo de 95%.
+cov:
+	cd backend && uv run pytest --cov=app/services --cov-report=term-missing --cov-fail-under=95

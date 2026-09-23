@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 from werkzeug.security import check_password_hash
 
@@ -41,3 +42,17 @@ def test_authenticate_with_wrong_password_returns_none(db_session: Session, user
 
 def test_authenticate_with_unknown_email_returns_none(db_session: Session) -> None:
     assert authenticate(db_session, "ninguem@example.com", USER_PASSWORD) is None
+
+
+def test_register_race_is_decided_by_unique_constraint(
+    db_session: Session, user: User, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Simula outro cadastro que passou pela checagem ao mesmo tempo: a checagem não vê o e-mail,
+    # mas o UNIQUE do banco barra no commit.
+    monkeypatch.setattr(db_session, "scalar", lambda *args, **kwargs: None)
+
+    with pytest.raises(EmailAlreadyRegistered):
+        register_user(db_session, USER_EMAIL, "outra-senha-123")
+
+    monkeypatch.undo()
+    assert db_session.scalar(select(func.count()).select_from(User)) == 1

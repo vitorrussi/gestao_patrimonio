@@ -14,8 +14,10 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "hypothesis>=6.168.0",
     "pyright>=1.1.414",
     "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
     "ruff>=0.16.8",
 ]
 
@@ -39,3 +41,10 @@ include = ["app", "migrations", "tests"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
