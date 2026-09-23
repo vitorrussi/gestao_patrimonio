@@ -4,21 +4,42 @@ from pathlib import Path
 
 from flask import Flask, abort, g, jsonify, request, send_from_directory
 
+from app.auth import init_auth, is_api_path
 from app.config import Config
 from app.db import create_engine_with_pragmas, make_session_factory
+from app.routes.auth import auth_bp
 from app.routes.health import health_bp
+from app.validation import RequestValidationError
+
+MISSING_SECRET_KEY_MESSAGE = (
+    "SECRET_KEY não definida. Gere uma com "
+    '`python -c "import secrets; print(secrets.token_hex(32))"` '
+    "e coloque no arquivo .env (veja .env.example)."
+)
 
 
 def create_app(config: Config | None = None) -> Flask:
     config = config or Config()
+    if not config.secret_key:
+        raise RuntimeError(MISSING_SECRET_KEY_MESSAGE)
+
     app = Flask(__name__, static_folder=None)
-    app.config["APP_CONFIG"] = config
+    app.config.update(
+        APP_CONFIG=config,
+        SECRET_KEY=config.secret_key,
+        ALLOW_REGISTRATION=config.allow_registration,
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE="Lax",
+    )
 
     engine = create_engine_with_pragmas(config.database_url)
     app.extensions["db_engine"] = engine
     app.extensions["db_session_factory"] = make_session_factory(engine)
 
+    init_auth(app)
     app.register_blueprint(health_bp)
+    app.register_blueprint(auth_bp)
+    _register_error_handlers(app)
     _register_frontend_routes(app, config.frontend_dist_dir)
 
     @app.teardown_appcontext
@@ -30,8 +51,10 @@ def create_app(config: Config | None = None) -> Flask:
     return app
 
 
-def _is_api_path(path: str) -> bool:
-    return path == "api" or path.startswith("api/")
+def _register_error_handlers(app: Flask) -> None:
+    @app.errorhandler(RequestValidationError)
+    def _handle_validation_error(error: RequestValidationError):
+        return jsonify(error="validation_error", details=error.details), 400
 
 
 def _register_frontend_routes(app: Flask, dist_dir: Path) -> None:
@@ -46,14 +69,14 @@ def _register_frontend_routes(app: Flask, dist_dir: Path) -> None:
 
     @app.errorhandler(404)
     def _handle_not_found(error: object):
-        if _is_api_path(request.path.lstrip("/")):
+        if is_api_path(request.path):
             return jsonify(error="not_found"), 404
         return _index_response()
 
     @app.get("/")
     @app.get("/<path:path>")
     def _serve_frontend(path: str = ""):
-        if _is_api_path(path):
+        if is_api_path(f"/{path}"):
             abort(404)
         target = dist_dir / path
         if path and target.is_file():

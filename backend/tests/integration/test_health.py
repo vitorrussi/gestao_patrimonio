@@ -23,8 +23,15 @@ def test_health_returns_value_read_from_database(app: Flask, client: FlaskClient
     assert response.get_json() == {"status": "ok", "database": "lido do banco"}
 
 
-def test_unknown_api_route_returns_json_404(client: FlaskClient) -> None:
-    response = client.get("/api/inexistente")
+def test_unknown_api_route_returns_json_404_when_logged_in(logged_client: FlaskClient) -> None:
+    response = logged_client.get("/api/inexistente")
 
     assert response.status_code == 404
     assert response.get_json() == {"error": "not_found"}
+
+
+def test_unknown_api_route_returns_401_without_login(client: FlaskClient) -> None:
+    response = client.get("/api/inexistente")
+
+    assert response.status_code == 401
+    assert response.get_json() == {"error": "unauthorized"}
