@@ -47,6 +47,7 @@ Rodar da raiz do repositório. Pré-requisitos: `uv`, Node 22 e `npm install` em
 - Testes: `make test` (pytest + Vitest)
 - Tudo (`check`): `make check`
 - Cobertura dos services: `make cov` (falha abaixo de 95%)
+- Métricas (cobertura geral, radon, jscpd): `make metrics`
 - Nova migração: `cd backend && uv run alembic revision --autogenerate -m "descrição"`. Revise o arquivo gerado: o autogenerate não detecta renomeações (vira remover + criar) nem mudanças em CHECK.
 - Docker: `docker compose up --build` → http://127.0.0.1:8080
 
