@@ -94,7 +94,12 @@ funciona atrás de NAT/Wi-Fi doméstico e sobrevive a troca de IP.
 1. No painel da Cloudflare (Zero Trust → Networks → Tunnels), criar um tunnel e copiar o token.
 2. Adicionar dois "Public Hostnames" ao tunnel (a Cloudflare cria os registros DNS sozinha):
    - `patrimonio.russi.app` → `http://app:8000`
-   - `demo.patrimonio.russi.app` → `http://demo:8000`
+   - `demo-patrimonio.russi.app` → `http://demo:8000`
+
+   Subdomínio de **um nível só** (`demo-patrimonio`, com hífen) — um hostname com dois níveis
+   antes do domínio (`demo.patrimonio.russi.app`) fica fora do certificado SSL gratuito da
+   Cloudflare (Universal SSL só cobre `russi.app` e `*.russi.app`) e dá
+   `ERR_SSL_VERSION_OR_CIPHER_MISMATCH` no navegador, sem sequer chegar no container.
 3. Colar o token em `CLOUDFLARE_TUNNEL_TOKEN` no `.env`.
 4. `make tunnel-up` (e `make tunnel-down` para parar).
 

@@ -55,7 +55,7 @@ demo-down:
 	docker compose --profile demo stop demo
 	docker compose --profile demo rm -f demo
 
-# Túnel Cloudflare (patrimonio.russi.app / demo.patrimonio.russi.app), sem abrir porta no
+# Túnel Cloudflare (patrimonio.russi.app / demo-patrimonio.russi.app), sem abrir porta no
 # roteador/firewall. Hostnames configurados no painel da Cloudflare; veja o README.
 tunnel-up:
 	@grep -q '^CLOUDFLARE_TUNNEL_TOKEN=..*' .env || { echo "Defina CLOUDFLARE_TUNNEL_TOKEN no .env (veja .env.example)"; exit 1; }
