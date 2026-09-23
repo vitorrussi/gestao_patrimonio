@@ -31,6 +31,16 @@ export default defineConfig([
       'sonarjs/cognitive-complexity': ['error', 15],
       'max-lines-per-function': ['error', { max: 50, skipBlankLines: true, skipComments: true }],
       'max-lines': ['error', { max: 400, skipBlankLines: true, skipComments: true }],
+      // Estilo, não métrica da seção 7: props do React já são imutáveis por convenção.
+      'sonarjs/prefer-read-only-props': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
+  },
+  {
+    // Componentes gerados pelo shadcn/ui exportam variantes junto dos componentes.
+    files: ['src/components/ui/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
   {
