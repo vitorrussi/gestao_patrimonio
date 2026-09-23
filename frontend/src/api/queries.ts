@@ -136,6 +136,14 @@ export function useSaveBalance(financingId: number) {
   )
 }
 
+/** Lança um saldo devedor logo após criar um financiamento (id só existe depois do POST). */
+export function useCreateBalance() {
+  return useSaveMutation(
+    ({ financingId, fields }: { financingId: number; fields: BalanceFields }) =>
+      api.post<Balance>(`/financings/${financingId}/balances`, fields),
+  )
+}
+
 export function useSaveExpense(propertyId: number) {
   return useSaveMutation(
     childMutation<ExpenseFields, Expense>(`/properties/${propertyId}/expenses`, '/expenses'),

@@ -118,6 +118,11 @@ Zero, um ou vários por imóvel (ex.: banco + parcelamento com construtora).
 | seguros MIP/DFI e taxa de administração | dinheiro | Componentes da parcela |
 | quitado | booleano | |
 
+> **Cadastro (só interface, nenhum campo novo no banco):** o formulário pergunta primeiro se o financiamento é **novo** ou **já em andamento**. Em ambos os casos o que é salvo continua sendo só `data da primeira parcela` + `prazo total (meses)` — só muda o que a tela pede:
+> - **Novo:** pede a data da 1ª parcela (hoje ou futura) e o prazo total do contrato, como hoje.
+> - **Já em andamento:** pede a data da **próxima** parcela a vencer e o **prazo restante** (meses), e grava esses valores nos mesmos dois campos. Isso é suficiente porque os vencimentos só são calculados daqui para a frente (seção 3.5) — não é preciso saber a data real de início do contrato nem quantas parcelas já foram pagas.
+> - Nesse segundo caso, o cadastro também exige lançar um **saldo devedor inicial** (ver abaixo) na hora, para a dívida não ser estimada como o valor financiado total (que seria o caso se não houvesse nenhum saldo devedor lançado).
+
 **Registro de saldo devedor** (vários por financiamento)
 | Campo | Tipo | Observação |
 |---|---|---|
@@ -301,6 +306,7 @@ Complementam os testes definidos em `STACK_E_PLANO.md`.
 - [x] **Vencimentos:** calculados na hora, sem gravar no banco (pode ser revisto após testes; ver seção 3.5)
 - [x] **Tipos de imóvel e despesa:** lista ampla mantida. Tipos confirmados até agora: terrenos, casas (dentro e fora de condomínio) e apartamentos; outros tipos ainda não mapeados
 - [x] **Coproprietários:** texto livre por enquanto; talvez vire cadastro próprio de pessoas depois
+- [x] **Cadastro de financiamento em andamento:** modo "novo" x "existente" no formulário (seção 3.3) é só uma UX — reaproveita `data da primeira parcela`/`prazo total` como "próxima parcela"/"prazo restante" e não grava histórico de parcelas já pagas fora do sistema
 
 ### Em aberto
 - [ ] Revisar as listas de tipos de imóvel e despesa depois de cadastrar os imóveis reais

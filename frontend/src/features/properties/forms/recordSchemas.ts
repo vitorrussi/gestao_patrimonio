@@ -15,6 +15,7 @@ import {
   enumText,
   integerText,
   optionalDate,
+  optionalMoney,
   optionalText,
   percentText,
   requiredDate,
@@ -81,24 +82,46 @@ export function formToBalance(values: BalanceFormValues): BalanceFields {
 
 // --- financiamento ---
 
-export const financingSchema = z.object({
-  lender: requiredText(100),
-  contract_number: optionalText(50),
-  financed_amount: requiredMoney,
-  amortization_system: enumText(AMORTIZATION_SYSTEM_LABELS),
-  annual_interest_rate: percentText(1000),
-  interest_index: enumText(INTEREST_INDEX_LABELS),
-  term_months: integerText(1, 1200),
-  first_installment_date: requiredDate,
-  due_day: integerText(1, 31),
-  current_installment: requiredMoney,
-  is_paid_off: z.boolean(),
-})
+/** Modo de cadastro: só decide quais campos o formulário pede, nada é gravado à parte. */
+export const FINANCING_MODE_LABELS = {
+  novo: 'Novo financiamento',
+  existente: 'Financiamento já em andamento',
+} as const
+export type FinancingMode = keyof typeof FINANCING_MODE_LABELS
+
+export const financingSchema = z
+  .object({
+    mode: enumText(FINANCING_MODE_LABELS),
+    lender: requiredText(100),
+    contract_number: optionalText(50),
+    financed_amount: requiredMoney,
+    amortization_system: enumText(AMORTIZATION_SYSTEM_LABELS),
+    annual_interest_rate: percentText(1000),
+    interest_index: enumText(INTEREST_INDEX_LABELS),
+    term_months: integerText(1, 1200),
+    first_installment_date: requiredDate,
+    due_day: integerText(1, 31),
+    current_installment: requiredMoney,
+    is_paid_off: z.boolean(),
+    initial_debt_balance: optionalMoney,
+    initial_debt_balance_date: optionalDate,
+  })
+  .refine(
+    (values) =>
+      values.mode !== 'existente' ||
+      (values.initial_debt_balance.trim() !== '' && values.initial_debt_balance_date.trim() !== ''),
+    {
+      message:
+        'Informe o saldo devedor atual (sem ele, a dívida aparece como o valor financiado total).',
+      path: ['initial_debt_balance'],
+    },
+  )
 export type FinancingFormValues = z.infer<typeof financingSchema>
 
 export function financingToForm(financing?: Financing): FinancingFormValues {
   if (!financing) {
     return {
+      mode: 'novo',
       lender: '',
       contract_number: '',
       financed_amount: '',
@@ -110,9 +133,12 @@ export function financingToForm(financing?: Financing): FinancingFormValues {
       due_day: '',
       current_installment: '',
       is_paid_off: false,
+      initial_debt_balance: '',
+      initial_debt_balance_date: '',
     }
   }
   return {
+    mode: 'novo',
     lender: financing.lender,
     contract_number: financing.contract_number ?? '',
     financed_amount: centsToInput(financing.financed_amount_cents),
@@ -124,6 +150,8 @@ export function financingToForm(financing?: Financing): FinancingFormValues {
     due_day: String(financing.due_day),
     current_installment: centsToInput(financing.current_installment_cents),
     is_paid_off: financing.is_paid_off,
+    initial_debt_balance: '',
+    initial_debt_balance_date: '',
   }
 }
 
