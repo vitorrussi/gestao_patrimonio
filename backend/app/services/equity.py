@@ -114,11 +114,16 @@ def property_equity(prop: PropertyInput) -> PropertyEquity:
     )
 
 
+def _valued(equities: list[PropertyEquity]) -> list[Decimal]:
+    return [e.gross for e in equities if e.gross is not None]
+
+
 def portfolio_summary(properties: Iterable[PropertyInput]) -> PortfolioSummary:
     """Totais só com imóveis ativos. Bruto total = soma dos brutos exibidos por imóvel."""
     active = [p for p in properties if p.is_active]
     equities = [property_equity(p) for p in active]
-    gross_total = sum((e.gross for e in equities if e.gross is not None), ZERO)
+    valued = _valued(equities)
+    gross_total = sum(valued, ZERO)
     debt_total = sum((e.debt for e in equities), ZERO)
     return PortfolioSummary(
         gross_total=gross_total,
@@ -126,6 +131,6 @@ def portfolio_summary(properties: Iterable[PropertyInput]) -> PortfolioSummary:
         net_total=gross_total - debt_total,
         property_count=len(active),
         count_by_type=dict(Counter(p.property_type for p in active)),
-        properties_without_value=sum(1 for e in equities if e.gross is None),
+        properties_without_value=len(equities) - len(valued),
         debt_estimated=any(e.debt_estimated for e in equities),
     )

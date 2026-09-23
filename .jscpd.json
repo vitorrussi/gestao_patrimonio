@@ -1,0 +1,16 @@
+{
+  "path": ["backend/app", "frontend/src"],
+  "format": ["python", "typescript", "tsx"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/components/ui/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/tests/**",
+    "**/migrations/**"
+  ],
+  "minLines": 5,
+  "minTokens": 50,
+  "reporters": ["console"],
+  "gitignore": true
+}

@@ -1,4 +1,4 @@
-.PHONY: dev lint types test check format cov
+.PHONY: dev lint types test check format cov metrics
 
 # Backend (Flask, porta 8080) e frontend (Vite, porta 5173) juntos; Ctrl+C encerra os dois.
 # A porta 8080 é a mesma do Docker: rode `docker compose down` antes.
@@ -29,3 +29,15 @@ format:
 # Cobertura dos services (cálculos): falha abaixo de 95%.
 cov:
 	cd backend && uv run pytest --cov=app/services --cov-report=term-missing --cov-fail-under=95
+
+# Métricas da seção 7 do STACK_E_PLANO: cobertura, complexidade/manutenibilidade (radon) e duplicação (jscpd).
+metrics: cov
+	cd backend && uv run pytest -q --cov=app --cov-report=term:skip-covered | grep -E "TOTAL|passed"
+	@echo "--- radon: funções com complexidade > 10 (nenhuma esperada) ---"
+	cd backend && uv run radon cc app -n C -s
+	@echo "--- radon: complexidade média ---"
+	cd backend && uv run radon cc app -a -s | tail -1
+	@echo "--- radon: índice de manutenibilidade (A = bom) ---"
+	cd backend && uv run radon mi app -s
+	@echo "--- jscpd: duplicação ---"
+	frontend/node_modules/.bin/jscpd --config .jscpd.json
