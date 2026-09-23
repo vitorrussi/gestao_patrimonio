@@ -39,6 +39,8 @@ Estrutura de pastas: seção 3 do `STACK_E_PLANO.md`.
 
 Rodar da raiz do repositório. Pré-requisitos: `uv`, Node 22 e `npm install` em `frontend/`.
 
+- Primeira vez: `cp .env.example .env` e preencher `SECRET_KEY` (o comando para gerar está no arquivo). Sem ela, `make dev` e o Docker não sobem. Os testes não precisam do `.env`.
+
 - Dev: `make dev`. Aplica as migrações e sobe o Flask em http://127.0.0.1:8080 e o Vite em http://127.0.0.1:5173 (proxy `/api`). A porta 8080 é a mesma do Docker: rode `docker compose down` antes.
 - Lint + formatação: `make lint` (Ruff + ESLint + Prettier). Para corrigir a formatação: `make format`.
 - Tipos: `make types` (pyright + `tsc -b`)

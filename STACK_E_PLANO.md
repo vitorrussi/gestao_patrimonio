@@ -153,12 +153,12 @@ Cada fase entrega algo funcionando e só adiciona o necessário. Não avance de 
 
 **Objetivo:** base segura para construir as funcionalidades.
 
-- [ ] Modelo de usuário, cadastro e login com Flask-Login
-- [ ] Todas as rotas `/api` (exceto login e health) exigindo autenticação
+- [x] Modelo de usuário, cadastro e login com Flask-Login
+- [x] Todas as rotas `/api` (exceto login e health) exigindo autenticação
 - [ ] Tipo ou helper padrão para dinheiro (centavos no banco ↔ `Decimal` no Python)
 - [ ] Validação de entrada com Pydantic em todas as rotas que recebem dados
 - [ ] Primeiros modelos de domínio e migrações (conforme o escopo definido)
-- [ ] Fixtures do pytest: app de teste, SQLite temporário por teste, usuário logado
+- [x] Fixtures do pytest: app de teste, SQLite temporário por teste, usuário logado
 - [ ] Testes unitários dos cálculos em `services/`
 - [ ] Testes de integração dos endpoints (status 200/201/400/401/404)
 - [ ] **Teste de isolamento:** usuário A não lê nem altera dados do usuário B
