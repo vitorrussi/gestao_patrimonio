@@ -128,18 +128,18 @@ Cada fase entrega algo funcionando e só adiciona o necessário. Não avance de 
 
 **Objetivo:** um "hello world" completo (front chamando a API, que lê o banco) rodando com um comando.
 
-- [ ] Repositório com a estrutura acima, `.gitignore` e `.env.example`
-- [ ] Backend: projeto com uv, `create_app()`, rota `GET /api/health`
-- [ ] Banco: SQLAlchemy com os PRAGMAs de WAL e busy_timeout aplicados em cada conexão
-- [ ] Alembic configurado, com uma migração inicial (mesmo que com uma tabela só)
-- [ ] Frontend: Vite + React + TypeScript (`strict`), uma página que chama `/api/health`
-- [ ] Proxy do Vite apontando `/api` para o Flask no desenvolvimento
-- [ ] `Dockerfile` multi-stage: build do front no estágio Node, `dist/` copiado para a imagem Python
-- [ ] Flask servindo os arquivos estáticos do `dist/` e a API em `/api`
-- [ ] `docker/entrypoint.sh`: `alembic upgrade head` e depois Gunicorn
-- [ ] `docker-compose.yml` só com o serviço `app`, porta local e bind mount `./data:/app/data`
-- [ ] `.dockerignore` excluindo `node_modules`, `.venv`, `.env`, `data/` e `.git`
-- [ ] Container rodando com usuário não-root
+- [x] Repositório com a estrutura acima, `.gitignore` e `.env.example`
+- [x] Backend: projeto com uv, `create_app()`, rota `GET /api/health`
+- [x] Banco: SQLAlchemy com os PRAGMAs de WAL e busy_timeout aplicados em cada conexão
+- [x] Alembic configurado, com uma migração inicial (mesmo que com uma tabela só)
+- [x] Frontend: Vite + React + TypeScript (`strict`), uma página que chama `/api/health`
+- [x] Proxy do Vite apontando `/api` para o Flask no desenvolvimento
+- [x] `Dockerfile` multi-stage: build do front no estágio Node, `dist/` copiado para a imagem Python
+- [x] Flask servindo os arquivos estáticos do `dist/` e a API em `/api`
+- [x] `docker/entrypoint.sh`: `alembic upgrade head` e depois Gunicorn
+- [x] `docker-compose.yml` só com o serviço `app`, porta local e bind mount `./data:/app/data`
+- [x] `.dockerignore` excluindo `node_modules`, `.venv`, `.env`, `data/` e `.git`
+- [x] Container rodando com usuário não-root
 - [ ] Ruff, ESLint, Prettier e `tsc --noEmit` configurados
 - [ ] pytest com um teste do `/api/health`
 

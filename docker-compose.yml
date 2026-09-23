@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "127.0.0.1:8080:8000"
+    volumes:
+      - ./data:/app/data

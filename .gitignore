@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+
+# Env / segredos
+.env
+
+# Banco de dados (bind mount; mantém a pasta, ignora o conteúdo)
+data/*
+!data/.gitkeep
+
+# Editor / SO
+.vscode/
+.idea/
+*.swp
+.DS_Store
