@@ -6,6 +6,7 @@ import { type UseFormReturn, useForm } from 'react-hook-form'
 import { CheckboxRow, FormErrorBanner, FormInput, FormSelect } from '@/components/form'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { propertyHelp } from '@/features/help/content'
 import {
   ACQUISITION_METHOD_LABELS,
   PROPERTY_TYPE_LABELS,
@@ -27,22 +28,90 @@ function IdentificationSection({ form }: { form: Form }) {
           form={form}
           name="nickname"
           label="Apelido"
+          help={propertyHelp.nickname}
           inputProps={{ placeholder: 'Ex.: Apto Centro' }}
         />
         <FormSelect
           form={form}
           name="property_type"
           label="Tipo"
+          help={propertyHelp.property_type}
           options={optionsOf(PROPERTY_TYPE_LABELS)}
         />
         <FormSelect
           form={form}
           name="usage"
           label="Uso"
+          help={propertyHelp.usage}
           options={optionsOf(PROPERTY_USAGE_LABELS)}
         />
       </CardContent>
     </Card>
+  )
+}
+
+function StreetFields({ form }: { form: Form }) {
+  return (
+    <>
+      <FormInput
+        form={form}
+        name="street"
+        label="Logradouro"
+        className="sm:col-span-4"
+        help={propertyHelp.street}
+      />
+      <FormInput
+        form={form}
+        name="number"
+        label="Número"
+        className="sm:col-span-2"
+        help={propertyHelp.number}
+      />
+      <FormInput
+        form={form}
+        name="complement"
+        label="Complemento"
+        className="sm:col-span-3"
+        help={propertyHelp.complement}
+      />
+      <FormInput
+        form={form}
+        name="neighborhood"
+        label="Bairro"
+        className="sm:col-span-3"
+        help={propertyHelp.neighborhood}
+      />
+    </>
+  )
+}
+
+function CityFields({ form }: { form: Form }) {
+  return (
+    <>
+      <FormInput
+        form={form}
+        name="city"
+        label="Cidade"
+        className="sm:col-span-3"
+        help={propertyHelp.city}
+      />
+      <FormInput
+        form={form}
+        name="state"
+        label="UF"
+        className="sm:col-span-1"
+        help={propertyHelp.state}
+        inputProps={{ maxLength: 2 }}
+      />
+      <FormInput
+        form={form}
+        name="zip_code"
+        label="CEP"
+        className="sm:col-span-2"
+        help={propertyHelp.zip_code}
+        inputProps={{ inputMode: 'numeric', placeholder: '00000-000' }}
+      />
+    </>
   )
 }
 
@@ -53,25 +122,8 @@ function AddressSection({ form }: { form: Form }) {
         <CardTitle>Endereço</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4 sm:grid-cols-6">
-        <FormInput form={form} name="street" label="Logradouro" className="sm:col-span-4" />
-        <FormInput form={form} name="number" label="Número" className="sm:col-span-2" />
-        <FormInput form={form} name="complement" label="Complemento" className="sm:col-span-3" />
-        <FormInput form={form} name="neighborhood" label="Bairro" className="sm:col-span-3" />
-        <FormInput form={form} name="city" label="Cidade" className="sm:col-span-3" />
-        <FormInput
-          form={form}
-          name="state"
-          label="UF"
-          className="sm:col-span-1"
-          inputProps={{ maxLength: 2 }}
-        />
-        <FormInput
-          form={form}
-          name="zip_code"
-          label="CEP"
-          className="sm:col-span-2"
-          inputProps={{ inputMode: 'numeric', placeholder: '00000-000' }}
-        />
+        <StreetFields form={form} />
+        <CityFields form={form} />
       </CardContent>
     </Card>
   )
@@ -84,9 +136,24 @@ function DocumentsSection({ form }: { form: Form }) {
         <CardTitle>Documentação</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4 sm:grid-cols-3">
-        <FormInput form={form} name="registration_number" label="Matrícula" />
-        <FormInput form={form} name="registry_office" label="Cartório de registro" />
-        <FormInput form={form} name="municipal_registration" label="Inscrição imobiliária (IPTU)" />
+        <FormInput
+          form={form}
+          name="registration_number"
+          label="Matrícula"
+          help={propertyHelp.registration_number}
+        />
+        <FormInput
+          form={form}
+          name="registry_office"
+          label="Cartório de registro"
+          help={propertyHelp.registry_office}
+        />
+        <FormInput
+          form={form}
+          name="municipal_registration"
+          label="Inscrição imobiliária (IPTU)"
+          help={propertyHelp.municipal_registration}
+        />
       </CardContent>
     </Card>
   )
@@ -103,18 +170,21 @@ function OwnershipSection({ form, showActive }: { form: Form; showActive: boolea
           form={form}
           name="ownership_percentage"
           label="Participação (%)"
+          help={propertyHelp.ownership_percentage}
           inputProps={{ inputMode: 'decimal' }}
         />
         <FormInput
           form={form}
           name="acquisition_date"
           label="Data de aquisição"
+          help={propertyHelp.acquisition_date}
           inputProps={{ type: 'date' }}
         />
         <FormSelect
           form={form}
           name="acquisition_method"
           label="Forma de aquisição"
+          help={propertyHelp.acquisition_method}
           options={optionsOf(ACQUISITION_METHOD_LABELS)}
         />
         {showActive && (
@@ -122,6 +192,7 @@ function OwnershipSection({ form, showActive }: { form: Form; showActive: boolea
             <CheckboxRow
               id="is_active"
               label="Imóvel ativo (desmarque quando for vendido)"
+              help={propertyHelp.is_active}
               {...form.register('is_active')}
             />
           </div>
@@ -142,13 +213,21 @@ function AcquisitionValuesSection({ form }: { form: Form }) {
           form={form}
           name="purchase_price"
           label="Valor de compra (R$)"
+          help={propertyHelp.purchase_price}
           inputProps={MONEY_INPUT_PROPS}
         />
-        <FormInput form={form} name="itbi" label="ITBI (R$)" inputProps={MONEY_INPUT_PROPS} />
+        <FormInput
+          form={form}
+          name="itbi"
+          label="ITBI (R$)"
+          help={propertyHelp.itbi}
+          inputProps={MONEY_INPUT_PROPS}
+        />
         <FormInput
           form={form}
           name="deed_registration"
           label="Escritura e registro (R$)"
+          help={propertyHelp.deed_registration}
           inputProps={MONEY_INPUT_PROPS}
         />
       </CardContent>

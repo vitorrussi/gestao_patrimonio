@@ -3,6 +3,7 @@ import { type UseFormReturn, useForm } from 'react-hook-form'
 import { useSaveExpense } from '@/api/queries'
 import type { Expense } from '@/api/types'
 import { CheckboxRow, FormInput, FormSelect } from '@/components/form'
+import { expenseHelp } from '@/features/help/content'
 import { errorMessage } from '@/lib/apiErrors'
 import { MONEY_INPUT_PROPS } from '@/lib/formFields'
 import { EXPENSE_TYPE_LABELS, FREQUENCY_LABELS, optionsOf } from '@/lib/labels'
@@ -24,18 +25,21 @@ function DescriptionFields({ form }: { form: Form }) {
         form={form}
         name="expense_type"
         label="Tipo"
+        help={expenseHelp.expense_type}
         options={optionsOf(EXPENSE_TYPE_LABELS)}
       />
       <FormInput
         form={form}
         name="description"
         label="Descrição"
+        help={expenseHelp.description}
         inputProps={{ placeholder: 'Ex.: IPTU 2026 — 10x' }}
       />
       <FormInput
         form={form}
         name="amount"
         label="Valor de cada vencimento (R$)"
+        help={expenseHelp.amount}
         inputProps={MONEY_INPUT_PROPS}
       />
     </>
@@ -51,6 +55,7 @@ function RuleFields({ form, locked }: { form: Form; locked: boolean }) {
         form={form}
         name="frequency"
         label="Periodicidade"
+        help={expenseHelp.frequency}
         options={optionsOf(FREQUENCY_LABELS)}
         hint={lockedHint}
         disabled={locked}
@@ -60,6 +65,7 @@ function RuleFields({ form, locked }: { form: Form; locked: boolean }) {
         name="due_day"
         label="Dia de vencimento"
         hint={lockedHint ?? 'Em meses mais curtos, vence no último dia.'}
+        help={expenseHelp.due_day}
         inputProps={{ inputMode: 'numeric', readOnly: locked }}
       />
       <FormInput
@@ -67,6 +73,7 @@ function RuleFields({ form, locked }: { form: Form; locked: boolean }) {
         name="start_date"
         label="Início"
         hint={lockedHint}
+        help={expenseHelp.start_date}
         inputProps={{ type: 'date', readOnly: locked }}
       />
       <FormInput
@@ -74,6 +81,7 @@ function RuleFields({ form, locked }: { form: Form; locked: boolean }) {
         name="installment_count"
         label="Nº de parcelas (opcional)"
         hint={lockedHint ?? 'Ex.: 10 para IPTU parcelado.'}
+        help={expenseHelp.installment_count}
         inputProps={{ inputMode: 'numeric', readOnly: locked }}
       />
     </>
@@ -88,10 +96,16 @@ function EndFields({ form }: { form: Form }) {
         name="end_date"
         label="Data de fim (opcional)"
         hint="Use para encerrar a despesa mantendo o histórico."
+        help={expenseHelp.end_date}
         inputProps={{ type: 'date' }}
       />
       <div className="flex items-center sm:pt-6">
-        <CheckboxRow id="is_active" label="Ativa" {...form.register('is_active')} />
+        <CheckboxRow
+          id="is_active"
+          label="Ativa"
+          help={expenseHelp.is_active}
+          {...form.register('is_active')}
+        />
       </div>
     </>
   )

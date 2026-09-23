@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useSaveBalance, useSaveValuation } from '@/api/queries'
 import type { Balance, Valuation } from '@/api/types'
 import { FormInput, FormSelect } from '@/components/form'
+import { balanceHelp, valuationHelp } from '@/features/help/content'
 import { errorMessage } from '@/lib/apiErrors'
 import { MONEY_INPUT_PROPS } from '@/lib/formFields'
 import { VALUATION_SOURCE_LABELS, optionsOf } from '@/lib/labels'
@@ -49,12 +50,25 @@ export function ValuationDialog({ propertyId, valuation, onClose }: ValuationDia
       isPending={save.isPending}
       errorMessage={save.isError ? errorMessage(save.error) : null}
     >
-      <FormInput form={form} name="valuation_date" label="Data" inputProps={{ type: 'date' }} />
-      <FormInput form={form} name="value" label="Valor (R$)" inputProps={MONEY_INPUT_PROPS} />
+      <FormInput
+        form={form}
+        name="valuation_date"
+        label="Data"
+        help={valuationHelp.valuation_date}
+        inputProps={{ type: 'date' }}
+      />
+      <FormInput
+        form={form}
+        name="value"
+        label="Valor (R$)"
+        help={valuationHelp.value}
+        inputProps={MONEY_INPUT_PROPS}
+      />
       <FormSelect
         form={form}
         name="source"
         label="Fonte"
+        help={valuationHelp.source}
         options={optionsOf(VALUATION_SOURCE_LABELS)}
       />
     </RecordDialog>
@@ -93,12 +107,14 @@ export function BalanceDialog({ financingId, balance, onClose }: BalanceDialogPr
         form={form}
         name="balance_date"
         label="Data do extrato"
+        help={balanceHelp.balance_date}
         inputProps={{ type: 'date' }}
       />
       <FormInput
         form={form}
         name="balance"
         label="Saldo devedor (R$)"
+        help={balanceHelp.balance}
         inputProps={MONEY_INPUT_PROPS}
       />
     </RecordDialog>
