@@ -6,9 +6,7 @@ interface HealthResponse {
 }
 
 type HealthState =
-  | { kind: 'carregando' }
-  | { kind: 'ok'; data: HealthResponse }
-  | { kind: 'erro'; message: string }
+  { kind: 'carregando' } | { kind: 'ok'; data: HealthResponse } | { kind: 'erro'; message: string }
 
 function App() {
   const [health, setHealth] = useState<HealthState>({ kind: 'carregando' })
