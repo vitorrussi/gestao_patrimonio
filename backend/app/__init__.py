@@ -9,6 +9,10 @@ from app.config import Config
 from app.db import create_engine_with_pragmas, make_session_factory
 from app.routes.auth import auth_bp
 from app.routes.health import health_bp
+from app.routes.payments import payments_bp
+from app.routes.properties import properties_bp
+from app.routes.records import records_bp
+from app.routes.views import views_bp
 from app.validation import RequestValidationError
 
 MISSING_SECRET_KEY_MESSAGE = (
@@ -38,7 +42,8 @@ def create_app(config: Config | None = None) -> Flask:
 
     init_auth(app)
     app.register_blueprint(health_bp)
-    app.register_blueprint(auth_bp)
+    for blueprint in (auth_bp, properties_bp, records_bp, payments_bp, views_bp):
+        app.register_blueprint(blueprint)
     _register_error_handlers(app)
     _register_frontend_routes(app, config.frontend_dist_dir)
 

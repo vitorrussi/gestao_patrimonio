@@ -56,3 +56,11 @@ def test_register_race_is_decided_by_unique_constraint(
 
     monkeypatch.undo()
     assert db_session.scalar(select(func.count()).select_from(User)) == 1
+
+
+@pytest.mark.real_password_hash
+def test_production_hash_is_scrypt(db_session: Session) -> None:
+    user = register_user(db_session, "real@example.com", "minha-senha-1")
+
+    assert user.password_hash.startswith("scrypt:")
+    assert authenticate(db_session, "real@example.com", "minha-senha-1") == user

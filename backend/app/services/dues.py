@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import calendar
 from collections.abc import Iterable, Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from decimal import Decimal
 from enum import StrEnum
@@ -162,6 +162,18 @@ def financing_dues(rule: FinancingRule, start: date, end: date) -> list[Due]:
         if due_date >= start:
             dues.append(Due(source, rule.property_id, due_date, rule.installment_amount))
     return dues
+
+
+def expense_has_due_on(rule: ExpenseRule, day: date) -> bool:
+    """`day` é vencimento da despesa? Ignora ativo/inativo: vencimento antigo segue pagável."""
+    rule = replace(rule, is_active=True, property_is_active=True)
+    return bool(expense_dues(rule, day, day))
+
+
+def financing_has_due_on(rule: FinancingRule, day: date) -> bool:
+    """`day` é uma parcela do financiamento? Ignora quitado/inativo pelo mesmo motivo."""
+    rule = replace(rule, is_paid_off=False, property_is_active=True)
+    return bool(financing_dues(rule, day, day))
 
 
 def dues_in_period(

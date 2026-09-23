@@ -5,12 +5,26 @@ import pytest
 from flask import Flask
 from flask.testing import FlaskClient
 from sqlalchemy.orm import Session
+from werkzeug.security import generate_password_hash
 
 from app import create_app
 from app.db import Base
 from app.models import User
+from app.services import auth as auth_service
 from app.services.auth import register_user
 from tests.constants import USER_EMAIL, USER_PASSWORD
+
+
+@pytest.fixture(autouse=True)
+def _fast_password_hash(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+    """scrypt leva ~65 ms por hash; nos testes usa um hash barato (o real tem teste próprio)."""
+    if request.node.get_closest_marker("real_password_hash"):
+        return
+    monkeypatch.setattr(
+        auth_service,
+        "generate_password_hash",
+        lambda password: generate_password_hash(password, method="pbkdf2:sha256:1"),
+    )
 
 
 @pytest.fixture()
@@ -47,4 +61,18 @@ def user(db_session: Session) -> User:
 def logged_client(client: FlaskClient, user: User) -> FlaskClient:
     response = client.post("/api/auth/login", json={"email": USER_EMAIL, "password": USER_PASSWORD})
     assert response.status_code == 200
+    return client
+
+
+OTHER_EMAIL = "outra-pessoa@example.com"
+
+
+@pytest.fixture()
+def other_client(app: Flask, logged_client: FlaskClient) -> FlaskClient:
+    """Segundo usuário logado, com cookies próprios (para testes de isolamento)."""
+    client = app.test_client()
+    response = client.post(
+        "/api/auth/register", json={"email": OTHER_EMAIL, "password": "senha-da-outra-123"}
+    )
+    assert response.status_code == 201
     return client

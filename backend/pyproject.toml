@@ -41,6 +41,7 @@ include = ["app", "migrations", "tests"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+markers = ["real_password_hash: usa o hash de senha de produção (scrypt)"]
 
 [tool.coverage.run]
 branch = true
