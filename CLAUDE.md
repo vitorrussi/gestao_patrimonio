@@ -50,7 +50,8 @@ Rodar da raiz do repositório. Pré-requisitos: `uv`, Node 22 e `npm install` em
 - Métricas (cobertura geral, radon, jscpd): `make metrics`
 - Demonstração com dados fictícios: `make demo` → http://127.0.0.1:8081 (`demo@example.com` / `demo-patrimonio`); `make demo-down` para parar. Ao mudar modelos, mantenha `backend/scripts/seed_demo.py` em dia (o teste `test_seed_demo.py` quebra se não estiver).
 - Nova migração: `cd backend && uv run alembic revision --autogenerate -m "descrição"`. Revise o arquivo gerado: o autogenerate não detecta renomeações (vira remover + criar) nem mudanças em CHECK.
-- Docker: `docker compose up -d --build` → http://127.0.0.1:8080 (reinicia sozinho com o Docker, `restart: unless-stopped`)
+- Docker (ambiente main, branch `main`, raiz do repo): `docker compose up -d --build app` → http://127.0.0.1:8080 (reinicia sozinho com o Docker, `restart: unless-stopped`)
+- Docker (ambiente dev, branch `dev`, worktree em `../gestao_patrimonio-dev`): `docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build app` → http://127.0.0.1:8082. Banco e `.env` próprios (`ALLOW_REGISTRATION=true`), imagem `gestao-patrimonio:dev` (não mexe na `gestao-patrimonio:local` do main).
 
 ## Forma de trabalho
 
@@ -60,3 +61,4 @@ Rodar da raiz do repositório. Pré-requisitos: `uv`, Node 22 e `npm install` em
 - Commits pequenos e com mensagens claras.
 - Ao concluir uma etapa, marcar os checkboxes correspondentes nos documentos de referência.
 - Em caso de ambiguidade, perguntar em vez de supor.
+- **Branches:** trabalho normal acontece na branch `dev` (worktree em `../gestao_patrimonio-dev`, ambiente Docker em http://127.0.0.1:8082 — comandos na seção "Comandos" acima). Só faz merge de `dev` para `main` quando o dono do projeto aprovar explicitamente o que está pronto; depois do merge, subir o ambiente main de novo (`docker compose up -d --build app` na raiz, branch `main`, porta 8080).
