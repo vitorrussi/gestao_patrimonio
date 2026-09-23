@@ -1,0 +1,15 @@
+# Túnel Cloudflare, opcional (make tunnel-up / make tunnel-down). Só sobe com o profile
+# "cloudflared", então não interfere em `docker compose up` nem em `make demo`.
+# Expõe `app` e `demo` na internet sem abrir porta no roteador/firewall (conexão só de saída).
+# Hostnames e destino (app:8000 / demo:8000) são configurados no painel da Cloudflare, não aqui.
+services:
+  cloudflared:
+    profiles: ["cloudflared"]
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      # Sem valor obrigatório aqui (quebraria `docker compose up` mesmo sem o profile
+      # "cloudflared" ativo — Compose interpola o arquivo inteiro antes de filtrar profiles).
+      # `make tunnel-up` confere que a variável está definida antes de subir o serviço.
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}

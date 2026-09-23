@@ -84,6 +84,27 @@ As datas são montadas em torno de hoje, então sempre há pagos, atrasados e a 
 - O cadastro fica desligado no demo, e o seed se recusa a rodar em banco cujo caminho não
   contenha "demo". O `data/app.db` real nunca é tocado.
 
+## Túnel para a internet (Cloudflare)
+
+Expõe `app` (porta 8080) e `demo` (porta 8081) na internet via
+[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/),
+sem abrir porta no roteador nem no firewall do Windows — o túnel só faz conexões de saída, então
+funciona atrás de NAT/Wi-Fi doméstico e sobrevive a troca de IP.
+
+1. No painel da Cloudflare (Zero Trust → Networks → Tunnels), criar um tunnel e copiar o token.
+2. Adicionar dois "Public Hostnames" ao tunnel (a Cloudflare cria os registros DNS sozinha):
+   - `patrimonio.russi.app` → `http://app:8000`
+   - `demo.patrimonio.russi.app` → `http://demo:8000`
+3. Colar o token em `CLOUDFLARE_TUNNEL_TOKEN` no `.env`.
+4. `make tunnel-up` (e `make tunnel-down` para parar).
+
+O `app` (e, se quiser o mock também acessível, o `demo` via `make demo`) precisa estar no ar para
+o hostname responder — o tunnel só encaminha requisições, não sobe os serviços.
+
+Recomendado: proteger `patrimonio.russi.app` com uma política de
+[Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/policies/access/) (ex.: só o
+seu e-mail) — é dado patrimonial pessoal, e o Access filtra antes mesmo de chegar no login do app.
+
 ## Testes e qualidade
 
 | Comando | O que faz |

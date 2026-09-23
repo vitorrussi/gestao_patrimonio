@@ -1,4 +1,4 @@
-.PHONY: dev lint types test check format cov metrics demo demo-down
+.PHONY: dev lint types test check format cov metrics demo demo-down tunnel-up tunnel-down
 
 # Backend (Flask, porta 8090) e frontend (Vite, porta 5173) juntos; Ctrl+C encerra os dois.
 # Portas diferentes das do Docker (8080 app, 8081 demo) e banco próprio (data/dev): dá para
@@ -54,3 +54,14 @@ demo:
 demo-down:
 	docker compose --profile demo stop demo
 	docker compose --profile demo rm -f demo
+
+# Túnel Cloudflare (patrimonio.russi.app / demo.patrimonio.russi.app), sem abrir porta no
+# roteador/firewall. Hostnames configurados no painel da Cloudflare; veja o README.
+tunnel-up:
+	@grep -q '^CLOUDFLARE_TUNNEL_TOKEN=..*' .env || { echo "Defina CLOUDFLARE_TUNNEL_TOKEN no .env (veja .env.example)"; exit 1; }
+	docker compose --profile cloudflared up -d cloudflared
+	@echo "Túnel no ar (precisa do app e/ou demo rodando para os hostnames responderem)"
+
+tunnel-down:
+	docker compose --profile cloudflared stop cloudflared
+	docker compose --profile cloudflared rm -f cloudflared
