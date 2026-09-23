@@ -1,6 +1,8 @@
 services:
   app:
     image: gestao-patrimonio:local
+    # Volta sozinho quando o Docker inicia (ex.: depois de reiniciar o Windows/WSL).
+    restart: unless-stopped
     build:
       context: .
       args:
@@ -19,6 +21,7 @@ services:
   demo:
     profiles: ["demo"]
     image: gestao-patrimonio:local
+    restart: unless-stopped
     build:
       context: .
       args:

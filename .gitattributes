@@ -1,0 +1,14 @@
+# Quebras de linha sempre LF, mesmo se o repositório for clonado ou editado pelo Windows.
+# Scripts .sh com CRLF quebram o container ("/bin/sh^M: not found").
+* text=auto eol=lf
+
+*.sh text eol=lf
+Makefile text eol=lf
+
+# Binários (nunca converter)
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.db binary

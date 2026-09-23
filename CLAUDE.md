@@ -41,7 +41,7 @@ Rodar da raiz do repositório. Pré-requisitos: `uv`, Node 22 e `npm install` em
 
 - Primeira vez: `cp .env.example .env` e preencher `SECRET_KEY` (o comando para gerar está no arquivo). Sem ela, `make dev` e o Docker não sobem. Os testes não precisam do `.env`.
 
-- Dev: `make dev`. Aplica as migrações e sobe o Flask em http://127.0.0.1:8080 e o Vite em http://127.0.0.1:5173 (proxy `/api`). A porta 8080 é a mesma do Docker: rode `docker compose down` antes.
+- Dev: `make dev`. Aplica as migrações e sobe o Flask em http://127.0.0.1:8090 e o Vite em http://127.0.0.1:5173 (proxy `/api`). Usa banco próprio (`data/dev/app.db`) e não conflita com o Docker (8080 e 8081).
 - Lint + formatação: `make lint` (Ruff + ESLint + Prettier). Para corrigir a formatação: `make format`.
 - Tipos: `make types` (pyright + `tsc -b`)
 - Testes: `make test` (pytest + Vitest)
@@ -50,7 +50,7 @@ Rodar da raiz do repositório. Pré-requisitos: `uv`, Node 22 e `npm install` em
 - Métricas (cobertura geral, radon, jscpd): `make metrics`
 - Demonstração com dados fictícios: `make demo` → http://127.0.0.1:8081 (`demo@example.com` / `demo-patrimonio`); `make demo-down` para parar. Ao mudar modelos, mantenha `backend/scripts/seed_demo.py` em dia (o teste `test_seed_demo.py` quebra se não estiver).
 - Nova migração: `cd backend && uv run alembic revision --autogenerate -m "descrição"`. Revise o arquivo gerado: o autogenerate não detecta renomeações (vira remover + criar) nem mudanças em CHECK.
-- Docker: `docker compose up --build` → http://127.0.0.1:8080
+- Docker: `docker compose up -d --build` → http://127.0.0.1:8080 (reinicia sozinho com o Docker, `restart: unless-stopped`)
 
 ## Forma de trabalho
 

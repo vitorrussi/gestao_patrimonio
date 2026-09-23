@@ -1,10 +1,11 @@
 .PHONY: dev lint types test check format cov metrics demo demo-down
 
-# Backend (Flask, porta 8080) e frontend (Vite, porta 5173) juntos; Ctrl+C encerra os dois.
-# A porta 8080 é a mesma do Docker: rode `docker compose down` antes.
+# Backend (Flask, porta 8090) e frontend (Vite, porta 5173) juntos; Ctrl+C encerra os dois.
+# Portas diferentes das do Docker (8080 app, 8081 demo) e banco próprio (data/dev): dá para
+# desenvolver com o servidor no ar sem misturar dados de teste com os reais.
 dev:
 	@trap 'kill 0' INT TERM EXIT; \
-	(cd backend && uv run alembic upgrade head && uv run flask --app app:create_app run --debug --port 8080) & \
+	(cd backend && export DATA_DIR=$(CURDIR)/data/dev && uv run alembic upgrade head && uv run flask --app app:create_app run --debug --port 8090) & \
 	(cd frontend && npm run dev) & \
 	wait
 

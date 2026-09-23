@@ -40,15 +40,18 @@ Variáveis do `.env` (detalhes em [`.env.example`](.env.example)):
 make dev
 ```
 
-Aplica as migrações e sobe o Flask em http://127.0.0.1:8080 e o Vite em
+Aplica as migrações e sobe o Flask em http://127.0.0.1:8090 e o Vite em
 **http://127.0.0.1:5173** (abra este; ele repassa `/api` para o Flask). `Ctrl+C` encerra os dois.
 
-A porta 8080 é a mesma do Docker: rode `docker compose down` antes de `make dev`.
+O dev usa um banco próprio, `data/dev/app.db`, e portas diferentes das do Docker (8080 e 8081):
+dá para desenvolver com o servidor no ar sem misturar dados de teste com os reais.
+Não defina `DATABASE_URL` no `.env` — o container lê o mesmo arquivo e passaria a usar esse caminho.
 
 ## Rodar com Docker
 
 ```bash
-docker compose up --build        # http://127.0.0.1:8080
+docker compose up -d --build     # http://127.0.0.1:8080, em segundo plano
+docker compose logs -f app       # acompanha os logs
 docker compose down              # para (os dados continuam em ./data)
 ```
 
