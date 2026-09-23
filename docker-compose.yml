@@ -12,7 +12,9 @@ services:
       - path: .env
         required: false
     ports:
-      - "127.0.0.1:8080:8000"
+      # APP_PORT deixa rodar mais de um ambiente (main, dev) na mesma máquina,
+      # cada um com seu .env; sem definir, mantém a porta de sempre (8080).
+      - "127.0.0.1:${APP_PORT:-8080}:8000"
     volumes:
       - ./data:/app/data
 

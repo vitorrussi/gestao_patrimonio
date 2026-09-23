@@ -1,0 +1,7 @@
+# Ambiente de testes (branch dev), separado do main (porta 8080, imagem gestao-patrimonio:local)
+# e do demo (8081). Não é o docker-compose.override.yml (esse já é usado pelo túnel Cloudflare
+# e é carregado automaticamente) — este aqui é passado explícito: `docker compose -f
+# docker-compose.yml -f docker-compose.dev.yml up -d --build app`.
+services:
+  app:
+    image: gestao-patrimonio:dev
