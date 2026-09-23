@@ -1,11 +1,15 @@
 // Moldura das telas logadas: cabeçalho com menu (no celular, menu em gaveta lateral).
 
-import { Building2, CalendarClock, LayoutDashboard, LogOut, Menu } from 'lucide-react'
+import { Building2, CalendarClock, LayoutDashboard, LogOut, Menu, RotateCcw } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router'
+import { toast } from 'sonner'
+import { useResetDemo } from '@/api/queries'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useLogout, useSession } from '@/features/auth/session'
+import { errorMessage } from '@/lib/apiErrors'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -35,6 +39,30 @@ function NavLinks({ onNavigate, vertical }: { onNavigate?: () => void; vertical?
         </NavLink>
       ))}
     </nav>
+  )
+}
+
+function ResetDemoButton() {
+  const reset = useResetDemo()
+  const handleReset = () => {
+    reset.mutate(undefined, {
+      onSuccess: () => toast.success('Dados de demonstração restaurados.'),
+      onError: (error) => toast.error(errorMessage(error)),
+    })
+  }
+  return (
+    <ConfirmDialog
+      trigger={
+        <Button variant="outline" size="sm" disabled={reset.isPending}>
+          <RotateCcw className="size-4" />
+          Restaurar padrão
+        </Button>
+      }
+      title="Restaurar dados de demonstração?"
+      description="Apaga tudo o que foi editado neste demo e recria a carteira fictícia original. O app real não é afetado."
+      confirmLabel="Restaurar"
+      onConfirm={handleReset}
+    />
   )
 }
 
@@ -83,6 +111,7 @@ export function AppLayout() {
             <span className="hidden text-sm text-muted-foreground sm:inline">
               {session.data?.email}
             </span>
+            {session.data?.is_demo && <ResetDemoButton />}
             <LogoutButton />
           </div>
         </div>

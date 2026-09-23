@@ -8,7 +8,8 @@ import pytest
 from sqlalchemy.orm import Session
 
 from app.db import create_engine_with_pragmas, make_session_factory
-from app.models.enums import DueStatus
+from app.models import Property
+from app.models.enums import DueStatus, PropertyType, PropertyUsage
 from app.repositories.portfolio import load_portfolio
 from app.services.dues import month_commitments
 from app.services.equity import portfolio_summary
@@ -59,6 +60,38 @@ def test_seed_payments_are_real_dues_and_never_in_the_future(demo_session: Sessi
     assert all(p.reference_due_date <= TODAY for p in portfolio.payments)
     paid_dates = {(p.source, p.reference_due_date) for p in portfolio.payments}
     assert len(paid_dates) == len(portfolio.payments)
+
+
+def test_reset_wipes_edits_and_rebuilds_same_portfolio(demo_session: Session) -> None:
+    user = seed_demo.seed(demo_session, TODAY)
+    original_id = user.id
+    original_property_count = len(load_portfolio(demo_session, user.id).properties)
+
+    # simula um visitante editando o demo: mais um imóvel avulso.
+    demo_session.add(
+        Property(
+            user_id=user.id,
+            nickname="Editado pelo visitante",
+            property_type=PropertyType.OUTRO,
+            usage=PropertyUsage.VAZIO,
+        )
+    )
+    demo_session.commit()
+
+    reset_user = seed_demo.reset(demo_session, TODAY)
+    portfolio = load_portfolio(demo_session, reset_user.id)
+
+    assert reset_user.id == original_id  # sessão de quem resetou continua válida
+    assert reset_user.email == seed_demo.DEMO_EMAIL
+    assert len(portfolio.properties) == original_property_count
+    assert {p.nickname for p in portfolio.properties} == {
+        "Apto Centro",
+        "Casa Jurerê",
+        "Terreno Pirabeiraba",
+        "Sala Comercial 1203",
+        "Vaga Garagem 12",
+        "Casa Antiga (vendida)",
+    }
 
 
 def test_seed_refuses_database_that_is_not_demo(

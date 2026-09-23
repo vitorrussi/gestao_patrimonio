@@ -11,6 +11,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from typing import Any
 
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app import clock
@@ -351,12 +352,31 @@ def _payments(s: Seeder) -> None:
             s.add(_payment_for(due, decision, s.today))
 
 
-def seed(session: Session, today: date) -> User:
-    user = register_user(session, DEMO_EMAIL, DEMO_PASSWORD)
-    seeder = Seeder(session, user, today)
+def _build_portfolio(seeder: Seeder) -> None:
     for build in (_apartment, _beach_house, _land, _office, _garage_and_sold):
         build(seeder)
     _payments(seeder)
+
+
+def seed(session: Session, today: date) -> User:
+    user = register_user(session, DEMO_EMAIL, DEMO_PASSWORD)
+    _build_portfolio(Seeder(session, user, today))
+    session.commit()
+    return user
+
+
+def reset(session: Session, today: date) -> User:
+    """Apaga a carteira do usuário demo (mantendo a conta) e recria os dados fictícios.
+
+    Mantém o id do usuário — a `ondelete="CASCADE"` das FKs cuida dos filhos de `Property`
+    (avaliações, financiamentos, despesas, saldos e pagamentos). Quem está logado no demo
+    continua logado depois do reset, só os dados mudam.
+    """
+    user = session.scalar(select(User).where(User.email == DEMO_EMAIL))
+    if user is None:
+        return seed(session, today)
+    session.execute(delete(Property).where(Property.user_id == user.id))
+    _build_portfolio(Seeder(session, user, today))
     session.commit()
     return user
 

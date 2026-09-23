@@ -18,7 +18,8 @@ def test_register_creates_user_and_logs_in(client: FlaskClient) -> None:
     assert response.status_code == 201
     body = response.get_json()
     assert body["email"] == "novo@example.com"
-    assert set(body) == {"id", "email"}
+    assert set(body) == {"id", "email", "is_demo"}
+    assert body["is_demo"] is False
     assert client.get("/api/auth/me").status_code == 200
 
 
@@ -81,8 +82,19 @@ def test_login_with_correct_credentials(client: FlaskClient, user: User) -> None
     response = client.post("/api/auth/login", json={"email": USER_EMAIL, "password": USER_PASSWORD})
 
     assert response.status_code == 200
-    assert response.get_json() == {"id": user.id, "email": USER_EMAIL}
-    assert client.get("/api/auth/me").get_json() == {"id": user.id, "email": USER_EMAIL}
+    assert response.get_json() == {"id": user.id, "email": USER_EMAIL, "is_demo": False}
+    assert client.get("/api/auth/me").get_json() == {
+        "id": user.id,
+        "email": USER_EMAIL,
+        "is_demo": False,
+    }
+
+
+def test_me_reports_is_demo_from_app_config(app: Flask, client: FlaskClient, user: User) -> None:
+    app.config["IS_DEMO"] = True
+    client.post("/api/auth/login", json={"email": USER_EMAIL, "password": USER_PASSWORD})
+
+    assert client.get("/api/auth/me").get_json()["is_demo"] is True
 
 
 @pytest.mark.parametrize(

@@ -8,6 +8,7 @@ from app.auth import init_auth, is_api_path
 from app.config import Config
 from app.db import create_engine_with_pragmas, make_session_factory
 from app.routes.auth import auth_bp
+from app.routes.demo import demo_bp
 from app.routes.health import health_bp
 from app.routes.payments import payments_bp
 from app.routes.properties import properties_bp
@@ -32,6 +33,7 @@ def create_app(config: Config | None = None) -> Flask:
         APP_CONFIG=config,
         SECRET_KEY=config.secret_key,
         ALLOW_REGISTRATION=config.allow_registration,
+        IS_DEMO=config.is_demo,
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
     )
@@ -42,7 +44,7 @@ def create_app(config: Config | None = None) -> Flask:
 
     init_auth(app)
     app.register_blueprint(health_bp)
-    for blueprint in (auth_bp, properties_bp, records_bp, payments_bp, views_bp):
+    for blueprint in (auth_bp, demo_bp, properties_bp, records_bp, payments_bp, views_bp):
         app.register_blueprint(blueprint)
     _register_error_handlers(app)
     _register_frontend_routes(app, config.frontend_dist_dir)

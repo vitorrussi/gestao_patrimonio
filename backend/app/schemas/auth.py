@@ -38,3 +38,4 @@ class UserResponse(BaseModel):
 
     id: int
     email: str
+    is_demo: bool

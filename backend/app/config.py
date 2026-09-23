@@ -38,3 +38,5 @@ class Config:
         )
         self.secret_key = os.environ.get("SECRET_KEY", "").strip()
         self.allow_registration = _env_bool("ALLOW_REGISTRATION", default=True)
+        # Só true no container demo: habilita POST /api/demo/reset (veja app/routes/demo.py).
+        self.is_demo = _env_bool("IS_DEMO", default=False)

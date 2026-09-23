@@ -28,3 +28,15 @@ def test_allow_registration_rejects_invalid_value(monkeypatch: pytest.MonkeyPatc
 
     with pytest.raises(ValueError, match="ALLOW_REGISTRATION"):
         Config()
+
+
+def test_is_demo_defaults_to_false(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("IS_DEMO", raising=False)
+
+    assert Config().is_demo is False
+
+
+def test_is_demo_true_when_set(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("IS_DEMO", "true")
+
+    assert Config().is_demo is True

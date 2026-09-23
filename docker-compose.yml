@@ -33,6 +33,7 @@ services:
       SECRET_KEY: ${DEMO_SECRET_KEY:-}
       DATABASE_URL: sqlite:////app/data/demo/app.db
       ALLOW_REGISTRATION: "false"
+      IS_DEMO: "true"
     ports:
       - "127.0.0.1:8081:8000"
     volumes:

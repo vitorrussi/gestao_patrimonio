@@ -74,6 +74,13 @@ export function useCommitments(period: YearMonth | null) {
   })
 }
 
+// --- demonstração ---
+
+/** Só chamado quando `session.is_demo` é true (veja AppLayout). Apaga e recria a carteira. */
+export function useResetDemo() {
+  return useSaveMutation(() => api.post<null>('/demo/reset', {}))
+}
+
 // --- imóveis ---
 
 export function useCreateProperty() {

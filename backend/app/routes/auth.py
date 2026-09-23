@@ -14,7 +14,8 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 
 def _user_json(user: User) -> Response:
-    return jsonify(UserResponse.model_validate(user).model_dump())
+    data = UserResponse(id=user.id, email=user.email, is_demo=current_app.config["IS_DEMO"])
+    return jsonify(data.model_dump())
 
 
 @auth_bp.post("/register")
