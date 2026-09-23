@@ -14,7 +14,7 @@ def test_health_with_empty_table_returns_null_database(client: FlaskClient) -> N
 def test_health_returns_value_read_from_database(app: Flask, client: FlaskClient) -> None:
     session_factory = app.extensions["db_session_factory"]
     with session_factory() as session:
-        session.add(AppMeta(chave="status", valor="lido do banco"))
+        session.add(AppMeta(key="status", value="lido do banco"))
         session.commit()
 
     response = client.get("/api/health")

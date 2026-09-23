@@ -6,13 +6,13 @@ interface HealthResponse {
 }
 
 type HealthState =
-  { kind: 'carregando' } | { kind: 'ok'; data: HealthResponse } | { kind: 'erro'; message: string }
+  { kind: 'loading' } | { kind: 'ok'; data: HealthResponse } | { kind: 'error'; message: string }
 
 function App() {
-  const [health, setHealth] = useState<HealthState>({ kind: 'carregando' })
+  const [health, setHealth] = useState<HealthState>({ kind: 'loading' })
 
   useEffect(() => {
-    let cancelado = false
+    let cancelled = false
 
     fetch('/api/health')
       .then((response) => {
@@ -22,28 +22,28 @@ function App() {
         return response.json() as Promise<HealthResponse>
       })
       .then((data) => {
-        if (!cancelado) setHealth({ kind: 'ok', data })
+        if (!cancelled) setHealth({ kind: 'ok', data })
       })
       .catch((error: unknown) => {
         const message = error instanceof Error ? error.message : String(error)
-        if (!cancelado) setHealth({ kind: 'erro', message })
+        if (!cancelled) setHealth({ kind: 'error', message })
       })
 
     return () => {
-      cancelado = true
+      cancelled = true
     }
   }, [])
 
   return (
     <main>
       <h1>Gestão de Patrimônio</h1>
-      {health.kind === 'carregando' && <p>Carregando status da API…</p>}
+      {health.kind === 'loading' && <p>Carregando status da API…</p>}
       {health.kind === 'ok' && (
         <p>
           API: {health.data.status} — banco: {health.data.database ?? 'sem dado'}
         </p>
       )}
-      {health.kind === 'erro' && <p>Falha ao consultar a API: {health.message}</p>}
+      {health.kind === 'error' && <p>Falha ao consultar a API: {health.message}</p>}
     </main>
   )
 }

@@ -12,5 +12,5 @@ class AppMeta(Base):
     __tablename__ = "app_meta"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    chave: Mapped[str] = mapped_column(String(100), unique=True)
-    valor: Mapped[str] = mapped_column(String(255))
+    key: Mapped[str] = mapped_column(String(100), unique=True)
+    value: Mapped[str] = mapped_column(String(255))
