@@ -37,7 +37,7 @@ typeCheckingMode = "standard"
 pythonVersion = "3.12"
 venvPath = "."
 venv = ".venv"
-include = ["app", "migrations", "tests"]
+include = ["app", "migrations", "tests", "scripts"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

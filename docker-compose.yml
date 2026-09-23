@@ -1,5 +1,6 @@
 services:
   app:
+    image: gestao-patrimonio:local
     build:
       context: .
       args:
@@ -10,5 +11,26 @@ services:
         required: false
     ports:
       - "127.0.0.1:8080:8000"
+    volumes:
+      - ./data:/app/data
+
+  # Demonstração com dados fictícios (porta 8081). Só sobe com `make demo`
+  # (ou `docker compose --profile demo up`). O banco demo é recriado a cada início.
+  demo:
+    profiles: ["demo"]
+    image: gestao-patrimonio:local
+    build:
+      context: .
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    entrypoint: ["/app/docker/demo-entrypoint.sh"]
+    environment:
+      # Chave própria: com a mesma do app real, um login do demo valeria no app real.
+      SECRET_KEY: ${DEMO_SECRET_KEY:-}
+      DATABASE_URL: sqlite:////app/data/demo/app.db
+      ALLOW_REGISTRATION: "false"
+    ports:
+      - "127.0.0.1:8081:8000"
     volumes:
       - ./data:/app/data

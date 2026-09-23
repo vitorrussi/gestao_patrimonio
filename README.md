@@ -57,6 +57,30 @@ docker compose down              # para (os dados continuam em ./data)
 - O container roda com um usuário comum com o mesmo UID/GID do host (padrão 1000). Se o seu
   for outro, exporte `UID` e `GID` antes do build.
 
+## Demonstração com dados fictícios
+
+```bash
+make demo        # http://127.0.0.1:8081 — login demo@example.com / demo-patrimonio
+make demo-down   # para o demo
+```
+
+Um segundo container, na porta 8081, com banco próprio em `data/demo/`. A cada início o banco
+é apagado, recriado pelas migrações e preenchido por `backend/scripts/seed_demo.py`:
+
+- 6 imóveis de tipos variados, um vendido e um sem avaliação;
+- histórico de avaliações;
+- financiamentos (um com saldos, um sem saldo lançado, um quitado);
+- despesas mensais, IPTU em 10× e seguro anual;
+- 6 meses de pagamentos, alguns com juros e alguns em atraso.
+
+As datas são montadas em torno de hoje, então sempre há pagos, atrasados e a pagar.
+
+- **Precisa de `DEMO_SECRET_KEY` no `.env`, diferente da `SECRET_KEY`.** Com a mesma chave, uma
+  sessão do demo seria aceita no app real (os dois bancos têm usuário com id 1). O `make demo`
+  confere isso.
+- O cadastro fica desligado no demo, e o seed se recusa a rodar em banco cujo caminho não
+  contenha "demo". O `data/app.db` real nunca é tocado.
+
 ## Testes e qualidade
 
 | Comando | O que faz |

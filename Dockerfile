@@ -31,8 +31,8 @@ COPY backend/ ./
 RUN uv sync --locked --no-dev
 
 COPY --from=frontend-build /frontend/dist /app/frontend/dist
-COPY docker/entrypoint.sh /app/docker/entrypoint.sh
-RUN chmod +x /app/docker/entrypoint.sh \
+COPY docker/ /app/docker/
+RUN chmod +x /app/docker/*.sh \
     && mkdir -p /app/data \
     && chown -R app:app /app
 

@@ -1,4 +1,4 @@
-.PHONY: dev lint types test check format cov metrics
+.PHONY: dev lint types test check format cov metrics demo demo-down
 
 # Backend (Flask, porta 8080) e frontend (Vite, porta 5173) juntos; Ctrl+C encerra os dois.
 # A porta 8080 é a mesma do Docker: rode `docker compose down` antes.
@@ -41,3 +41,15 @@ metrics: cov
 	cd backend && uv run radon mi app -s
 	@echo "--- jscpd: duplicação ---"
 	frontend/node_modules/.bin/jscpd --config .jscpd.json
+
+# Demonstração com dados fictícios em http://127.0.0.1:8081 (banco próprio em data/demo, recriado
+# a cada início). Exige DEMO_SECRET_KEY no .env, diferente da SECRET_KEY do app real.
+demo:
+	@grep -q '^DEMO_SECRET_KEY=..*' .env || { echo "Defina DEMO_SECRET_KEY no .env (veja .env.example)"; exit 1; }
+	@[ "$$(grep '^DEMO_SECRET_KEY=' .env | cut -d= -f2-)" != "$$(grep '^SECRET_KEY=' .env | cut -d= -f2-)" ] || { echo "DEMO_SECRET_KEY precisa ser diferente de SECRET_KEY"; exit 1; }
+	docker compose --profile demo up -d --build demo
+	@echo "Demo em http://127.0.0.1:8081 — login demo@example.com / demo-patrimonio"
+
+demo-down:
+	docker compose --profile demo stop demo
+	docker compose --profile demo rm -f demo
