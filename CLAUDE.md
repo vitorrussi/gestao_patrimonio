@@ -23,6 +23,7 @@ Leia os dois antes de planejar qualquer trabalho. Se uma instrução contradisse
 10. Nomes no código (variáveis, funções, classes, tabelas) em inglês. Textos da interface em português do Brasil. Valores de enum conforme o `ESCOPO_IMOVEIS.md`.
 11. Todo bug corrigido ganha um teste que o reproduz. Toda mudança em cálculo vem com teste novo ou atualizado.
 12. Não implementar itens fora da fase atual, nem "já deixando pronto".
+13. Estilos só com os tokens de tema do shadcn/ui (variáveis CSS) e classes utilitárias do Tailwind. Não usar cores, fontes ou tamanhos fixos nos componentes.
 
 ## Stack
 
@@ -36,13 +37,15 @@ Estrutura de pastas: seção 3 do `STACK_E_PLANO.md`.
 
 ## Comandos
 
-<!-- Preencher na Etapa 2, quando o Makefile/scripts existirem. -->
-- Dev: _a definir_
-- Lint: _a definir_
-- Tipos: _a definir_
-- Testes: _a definir_
-- Tudo (`check`): _a definir_
-- Docker: `docker compose up --build`
+Rodar da raiz do repositório. Pré-requisitos: `uv`, Node 22 e `npm install` em `frontend/`.
+
+- Dev: `make dev`. Aplica as migrações e sobe o Flask em http://127.0.0.1:8080 e o Vite em http://127.0.0.1:5173 (proxy `/api`). A porta 8080 é a mesma do Docker: rode `docker compose down` antes.
+- Lint + formatação: `make lint` (Ruff + ESLint + Prettier). Para corrigir a formatação: `make format`.
+- Tipos: `make types` (pyright + `tsc -b`)
+- Testes: `make test` (pytest + Vitest)
+- Tudo (`check`): `make check`
+- Nova migração: `cd backend && uv run alembic revision --autogenerate -m "descrição"`
+- Docker: `docker compose up --build` → http://127.0.0.1:8080
 
 ## Forma de trabalho
 

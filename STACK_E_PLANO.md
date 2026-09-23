@@ -140,8 +140,8 @@ Cada fase entrega algo funcionando e só adiciona o necessário. Não avance de 
 - [x] `docker-compose.yml` só com o serviço `app`, porta local e bind mount `./data:/app/data`
 - [x] `.dockerignore` excluindo `node_modules`, `.venv`, `.env`, `data/` e `.git`
 - [x] Container rodando com usuário não-root
-- [ ] Ruff, ESLint, Prettier e `tsc --noEmit` configurados
-- [ ] pytest com um teste do `/api/health`
+- [x] Ruff, ESLint, Prettier e `tsc --noEmit` configurados
+- [x] pytest com um teste do `/api/health`
 
 **Pronto quando:** `docker compose up --build` sobe o app, a página abre em `localhost`, e recriar o container não apaga o banco.
 
@@ -164,7 +164,7 @@ Cada fase entrega algo funcionando e só adiciona o necessário. Não avance de 
 - [ ] **Teste de isolamento:** usuário A não lê nem altera dados do usuário B
 - [ ] Teste de migrações: upgrade do zero e downgrade da última
 - [ ] Testes de propriedades com Hypothesis nos cálculos
-- [ ] Regra C901 do Ruff ativa (complexidade ≤ 10)
+- [x] Regra C901 do Ruff ativa (complexidade ≤ 10)
 
 **Pronto quando:** a suíte roda em segundos, e a cobertura dos módulos de cálculo está perto de 100%.
 
@@ -178,7 +178,7 @@ Cada fase entrega algo funcionando e só adiciona o necessário. Não avance de 
 - [ ] GitHub Actions: pytest com relatório de cobertura
 - [ ] Limites de cobertura no CI (cálculos ~100%, resto 70–80%)
 - [ ] bandit no CI
-- [ ] Regras do ESLint: `complexity`, `max-lines`, `max-lines-per-function`, sonarjs (complexidade cognitiva)
+- [x] Regras do ESLint: `complexity`, `max-lines`, `max-lines-per-function`, sonarjs (complexidade cognitiva)
 - [ ] jscpd no CI
 - [ ] Build da imagem Docker no CI (garante que o Dockerfile não quebrou)
 - [ ] pre-commit local com Ruff e Prettier (opcional, mas ajuda)
