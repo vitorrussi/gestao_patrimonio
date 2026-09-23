@@ -1,4 +1,4 @@
-.PHONY: dev lint types test check format cov metrics demo demo-down tunnel-up tunnel-down
+.PHONY: dev lint types test check format cov metrics demo demo-down tunnel-up tunnel-down refresh
 
 # Backend (Flask, porta 8090) e frontend (Vite, porta 5173) juntos; Ctrl+C encerra os dois.
 # Portas diferentes das do Docker (8080 app, 8081 demo) e banco próprio (data/dev): dá para
@@ -65,3 +65,11 @@ tunnel-up:
 tunnel-down:
 	docker compose --profile cloudflared stop cloudflared
 	docker compose --profile cloudflared rm -f cloudflared
+
+# Depois de um `git pull`: reconstrói e reinicia demo e cloudflared (Docker). O `make dev`
+# roda fora do Docker e precisa ser reiniciado à mão (Ctrl+C no terminal onde está rodando
+# e `make dev` de novo — rode `cd frontend && npm install` antes, se ganhou dependência nova).
+refresh:
+	$(MAKE) demo
+	$(MAKE) tunnel-up
+	@echo "demo e cloudflared atualizados. Reinicie o 'make dev' à mão (Ctrl+C e make dev de novo)."

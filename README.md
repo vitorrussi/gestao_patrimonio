@@ -105,6 +105,19 @@ Recomendado: proteger `patrimonio.russi.app` com uma política de
 [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/policies/access/) (ex.: só o
 seu e-mail) — é dado patrimonial pessoal, e o Access filtra antes mesmo de chegar no login do app.
 
+### Atualizar depois de um `git pull`
+
+Com `make dev`, `make demo` e `make tunnel-up` rodando ao mesmo tempo (ex.: notebook com WSL2):
+
+```bash
+git pull
+make refresh   # reconstrói e reinicia demo e cloudflared (Docker)
+```
+
+O `make dev` roda fora do Docker (Flask/Vite direto) e não é reiniciado pelo `refresh`: pare com
+Ctrl+C no terminal onde está rodando e rode `make dev` de novo (`cd frontend && npm install`
+antes, se o frontend ganhou dependência nova).
+
 ## Testes e qualidade
 
 | Comando | O que faz |
