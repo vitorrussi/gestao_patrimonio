@@ -64,6 +64,10 @@ export const router = createBrowserRouter([
                 Component: m.CommitmentsPage,
               })),
           },
+          {
+            path: 'ajuda',
+            lazy: () => import('@/features/help/HelpPage').then((m) => ({ Component: m.HelpPage })),
+          },
           { path: '*', element: <NotFoundPage /> },
         ],
       },

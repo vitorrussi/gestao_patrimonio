@@ -1,6 +1,14 @@
 // Moldura das telas logadas: cabeçalho com menu (no celular, menu em gaveta lateral).
 
-import { Building2, CalendarClock, LayoutDashboard, LogOut, Menu, RotateCcw } from 'lucide-react'
+import {
+  Building2,
+  CalendarClock,
+  CircleHelp,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  RotateCcw,
+} from 'lucide-react'
 import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router'
 import { toast } from 'sonner'
@@ -16,6 +24,7 @@ const NAV_ITEMS = [
   { to: '/', label: 'Painel', icon: LayoutDashboard, end: true },
   { to: '/imoveis', label: 'Imóveis', icon: Building2, end: false },
   { to: '/compromissos', label: 'Compromissos', icon: CalendarClock, end: false },
+  { to: '/ajuda', label: 'Ajuda', icon: CircleHelp, end: false },
 ]
 
 function NavLinks({ onNavigate, vertical }: { onNavigate?: () => void; vertical?: boolean }) {

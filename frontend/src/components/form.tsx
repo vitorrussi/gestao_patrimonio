@@ -8,6 +8,7 @@ import {
   type Path,
   type UseFormReturn,
 } from 'react-hook-form'
+import { FieldHelp } from '@/components/FieldHelp'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -17,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import type { FieldHelp as FieldHelpContent } from '@/features/help/content'
 import { cn } from '@/lib/utils'
 
 interface FieldRowProps {
@@ -25,13 +27,17 @@ interface FieldRowProps {
   error?: string
   hint?: string
   className?: string
+  help?: FieldHelpContent
   children: ReactNode
 }
 
-export function FieldRow({ id, label, error, hint, className, children }: FieldRowProps) {
+export function FieldRow({ id, label, error, hint, className, help, children }: FieldRowProps) {
   return (
     <div className={cn('grid gap-1.5', className)}>
-      <Label htmlFor={id}>{label}</Label>
+      <div className="flex items-center gap-1.5">
+        <Label htmlFor={id}>{label}</Label>
+        {help && <FieldHelp content={help} />}
+      </div>
       {children}
       {hint && !error && <p className="text-xs text-muted-foreground">{hint}</p>}
       {error && (
@@ -96,14 +102,18 @@ export function EnumSelect<T extends FieldValues>({
 
 interface CheckboxRowProps extends React.ComponentProps<'input'> {
   label: string
+  help?: FieldHelpContent
 }
 
-export function CheckboxRow({ id, label, ...props }: CheckboxRowProps) {
+export function CheckboxRow({ id, label, help, ...props }: CheckboxRowProps) {
   return (
-    <label htmlFor={id} className="flex items-center gap-2 text-sm">
-      <input id={id} type="checkbox" className="size-4 accent-primary" {...props} />
-      {label}
-    </label>
+    <div className="flex items-center gap-1.5">
+      <label htmlFor={id} className="flex items-center gap-2 text-sm">
+        <input id={id} type="checkbox" className="size-4 accent-primary" {...props} />
+        {label}
+      </label>
+      {help && <FieldHelp content={help} />}
+    </div>
   )
 }
 
@@ -113,6 +123,7 @@ interface FormInputProps<T extends FieldValues> {
   label: string
   hint?: string
   className?: string
+  help?: FieldHelpContent
   inputProps?: React.ComponentProps<'input'>
 }
 
@@ -123,11 +134,12 @@ export function FormInput<T extends FieldValues>({
   label,
   hint,
   className,
+  help,
   inputProps,
 }: FormInputProps<T>) {
   const error = form.getFieldState(name, form.formState).error?.message
   return (
-    <FieldRow id={name} label={label} error={error} hint={hint} className={className}>
+    <FieldRow id={name} label={label} error={error} hint={hint} className={className} help={help}>
       <Input
         id={name}
         aria-invalid={error ? true : undefined}
@@ -145,6 +157,7 @@ interface FormSelectProps<T extends FieldValues> {
   label: string
   options: { value: string; label: string }[]
   hint?: string
+  help?: FieldHelpContent
   disabled?: boolean
 }
 
@@ -154,11 +167,12 @@ export function FormSelect<T extends FieldValues>({
   label,
   options,
   hint,
+  help,
   disabled,
 }: FormSelectProps<T>) {
   const error = form.getFieldState(name, form.formState).error?.message
   return (
-    <FieldRow id={name} label={label} error={error} hint={hint}>
+    <FieldRow id={name} label={label} error={error} hint={hint} help={help}>
       <EnumSelect
         id={name}
         name={name}
