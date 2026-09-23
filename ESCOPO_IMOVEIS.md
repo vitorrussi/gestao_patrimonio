@@ -239,14 +239,14 @@ Arquivos ligados a um imóvel (ou a um financiamento, contrato ou pagamento).
 ## 5. Roadmap funcional
 
 ### Versão 1 — MVP
-- [ ] Cadastro de imóvel (identificação, tipo, uso, endereço, matrícula, inscrição do IPTU, participação, aquisição)
-- [ ] Valor de aquisição (compra + ITBI + escritura/registro)
-- [ ] Histórico de avaliações de mercado
-- [ ] Financiamento com parcela e saldo devedor lançados à mão
-- [ ] Despesas recorrentes genéricas (IPTU, condomínio, seguro etc.)
-- [ ] Vencimentos e registro de pagamentos
-- [ ] Painel geral e compromissos do mês
-- [ ] Marcar imóvel como vendido/inativo
+- [x] Cadastro de imóvel (identificação, tipo, uso, endereço, matrícula, inscrição do IPTU, participação, aquisição)
+- [x] Valor de aquisição (compra + ITBI + escritura/registro)
+- [x] Histórico de avaliações de mercado
+- [x] Financiamento com parcela e saldo devedor lançados à mão
+- [x] Despesas recorrentes genéricas (IPTU, condomínio, seguro etc.)
+- [x] Vencimentos e registro de pagamentos
+- [x] Painel geral e compromissos do mês
+- [x] Marcar imóvel como vendido/inativo
 
 ### Versão 2
 - [ ] Próximos vencimentos / calendário

@@ -191,14 +191,14 @@ Cada fase entrega algo funcionando e só adiciona o necessário. Não avance de 
 
 **Objetivo:** interface usável no computador e no celular, testada de ponta a ponta.
 
-- [ ] React Router, TanStack Query, Tailwind + shadcn/ui
-- [ ] Formulários com React Hook Form + Zod
-- [ ] Tela de login e fluxo de sessão (redirecionar quando não autenticado)
-- [ ] Tipos TypeScript das respostas da API (à mão)
+- [x] React Router, TanStack Query, Tailwind + shadcn/ui
+- [x] Formulários com React Hook Form + Zod
+- [x] Tela de login e fluxo de sessão (redirecionar quando não autenticado)
+- [x] Tipos TypeScript das respostas da API (à mão)
 - [ ] Teste de contrato: respostas da API validadas contra os tipos/schemas do front
 - [ ] Gráficos com Recharts
-- [ ] Layout responsivo
-- [ ] Vitest para lógica do front (formatação de moeda, datas etc.)
+- [x] Layout responsivo
+- [x] Vitest para lógica do front (formatação de moeda, datas etc.)
 - [ ] Playwright: login → cadastrar → ver patrimônio → editar → excluir → logout
 - [ ] Playwright rodando em viewport desktop e mobile
 - [ ] type-coverage e knip configurados
